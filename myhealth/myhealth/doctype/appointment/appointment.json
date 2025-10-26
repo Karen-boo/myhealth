@@ -1,25 +1,67 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "APT.###",
  "creation": "2025-10-24 21:48:12.688910",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "section_break_cb3e"
+  "patient",
+  "doctor_name",
+  "service",
+  "service_status",
+  "appointment_date",
+  "appointment_time",
+  "notes"
  ],
  "fields": [
   {
-   "fieldname": "section_break_cb3e",
-   "fieldtype": "Section Break"
+   "fieldname": "doctor_name",
+   "fieldtype": "Data",
+   "label": "Doctor Name"
+  },
+  {
+   "fieldname": "service",
+   "fieldtype": "Select",
+   "label": "Service",
+   "options": "Treatment\nEmergency\nConsultation\nFollow-up"
+  },
+  {
+   "fieldname": "service_status",
+   "fieldtype": "Select",
+   "label": "Service Status",
+   "options": "Pending\nCompleted"
+  },
+  {
+   "fieldname": "appointment_date",
+   "fieldtype": "Date",
+   "label": "Appointment Date"
+  },
+  {
+   "fieldname": "appointment_time",
+   "fieldtype": "Time",
+   "label": "Appointment Time"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "patient",
+   "fieldtype": "Link",
+   "label": "Patient ",
+   "options": "Patient"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-24 21:48:12.688910",
+ "modified": "2025-10-26 21:01:09.620673",
  "modified_by": "Administrator",
  "module": "Myhealth",
  "name": "Appointment",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {

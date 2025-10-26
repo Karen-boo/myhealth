@@ -5,6 +5,12 @@ app_description = "Health"
 app_email = "karenkagai4@gmail.com"
 app_license = "mit"
 
+override_whitelisted_methods = {
+    "myhealth.myhealth.api.appointment_api.create_appointment": "myhealth.myhealth.api.appointment_api.create_appointment",
+    "myhealth.myhealth.api.appointment_api.get_appointments": "myhealth.myhealth.api.appointment_api.get_appointments",
+    "myhealth.myhealth.api.appointment_api.update_appointment": "myhealth.myhealth.api.appointment_api.update_appointment",
+}
+
 # Apps
 # ------------------
 
