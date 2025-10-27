@@ -6,15 +6,25 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "basic_info_section",
   "first_name",
   "last_name",
   "full_name",
   "gender",
   "date_of_birth",
   "age",
-  "email",
   "blood_group",
-  "marital_status"
+  "marital_status",
+  "contact_info_section",
+  "email",
+  "phone_number",
+  "address",
+  "insurance_info_section",
+  "insurance_number",
+  "insurance_provider",
+  "id_document",
+  "insurance_card",
+  "status"
  ],
  "fields": [
   {
@@ -64,12 +74,63 @@
    "fieldtype": "Select",
    "label": "Marital Status",
    "options": "Single\nMarried"
+  },
+  {
+   "fieldname": "phone_number",
+   "fieldtype": "Data",
+   "label": "Phone Number"
+  },
+  {
+   "fieldname": "address",
+   "fieldtype": "Small Text",
+   "label": "Address"
+  },
+  {
+   "fieldname": "insurance_number",
+   "fieldtype": "Data",
+   "label": "Insurance Number"
+  },
+  {
+   "fieldname": "insurance_provider",
+   "fieldtype": "Data",
+   "label": "Insurance Provider"
+  },
+  {
+   "fieldname": "id_document",
+   "fieldtype": "Attach",
+   "label": "ID document"
+  },
+  {
+   "fieldname": "insurance_card",
+   "fieldtype": "Attach",
+   "label": "Insurance Card"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Active\nInactive\nSelect"
+  },
+  {
+   "fieldname": "basic_info_section",
+   "fieldtype": "Section Break",
+   "label": "Basic Info"
+  },
+  {
+   "fieldname": "contact_info_section",
+   "fieldtype": "Section Break",
+   "label": "Contact Info"
+  },
+  {
+   "fieldname": "insurance_info_section",
+   "fieldtype": "Section Break",
+   "label": "Insurance Info"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-27 11:53:56.775621",
+ "modified": "2025-10-27 12:30:57.969709",
  "modified_by": "Administrator",
  "module": "Myhealth",
  "name": "Patient",

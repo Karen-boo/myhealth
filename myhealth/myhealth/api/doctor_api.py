@@ -52,3 +52,27 @@ def deactivate_doctor(name):
     doc.save(ignore_permissions=True)
     frappe.db.commit()
     return {"message": f"Doctor {name} marked as On Leave"}
+
+
+@frappe.whitelist(allow_guest=False)
+def get_doctor_patients(doctor):
+    """Fetch all unique patients associated with a specific doctor"""
+    appointments = frappe.get_all(
+        "Appointment",
+        filters={"doctor": doctor},
+        fields=["patient"],
+        distinct=True
+    )
+    patients = []
+    for appt in appointments:
+        patient = frappe.get_doc("Patient", appt.patient)
+        patients.append({
+            "patient_id": patient.name,
+            "first_name": patient.first_name,
+            "last_name": patient.last_name,
+            "gender": patient.gender,
+            "age": patient.age,
+            "email": patient.email
+        })
+
+    return {"doctor": doctor, "patients": patients}

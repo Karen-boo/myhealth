@@ -16,6 +16,10 @@ class Patient(Document):
             # Calculate age
             self.age = self.calculate_age(dob)
 
+			  # --- Phone Number ---
+        if self.phone_number and not self.phone_number.isdigit():
+            frappe.throw("Phone number should contain only digits")
+
         # --- Full Name ---
         if self.first_name and self.last_name:
             self.full_name = f"{self.first_name} {self.last_name}"

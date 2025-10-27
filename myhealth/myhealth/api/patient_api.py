@@ -48,3 +48,55 @@ def list_patients():
     frappe.set_user('Administrator')
     patients = frappe.get_all("Patient", fields=["name", "first_name", "last_name", "age", "gender", "email"])
     return {"patients": patients}
+
+@frappe.whitelist(allow_guest=False)
+def upload_patient_files(patient, id_document=None, insurance_card=None):
+    """Attach ID and Insurance files to patient"""
+    doc = frappe.get_doc("Patient", patient)
+
+    if id_document:
+        doc.id_document = id_document
+    if insurance_card:
+        doc.insurance_card = insurance_card
+
+    doc.save(ignore_permissions=True)
+    frappe.db.commit()
+
+    return {"message": "Files uploaded successfully"}
+
+@frappe.whitelist(allow_guest=False)
+def get_patient_history(patient):
+    """Return a patient's appointments and related info"""
+    appointments = frappe.get_all(
+        "Appointment",
+        filters={"patient": patient},
+        fields=[
+            "name", "doctor", "service", "appointment_date", "service_status", "notes"
+        ]
+    )
+    return {"patient": patient, "appointments": appointments}
+
+
+@frappe.whitelist(allow_guest=False)
+def get_patient_doctors(patient):
+    """Fetch all doctors a patient has had appointments with"""
+    appointments = frappe.get_all(
+        "Appointment",
+        filters={"patient": patient},
+        fields=["doctor"],
+        distinct=True
+    )
+
+    doctors = []
+    for appt in appointments:
+        doctor = frappe.get_doc("Doctor", appt.doctor)
+        doctors.append({
+            "doctor_id": doctor.name,
+            "first_name": doctor.first_name,
+            "last_name": doctor.last_name,
+            "specialization": doctor.specialization,
+            "availability_status": doctor.availability_status,
+            "email": doctor.email
+        })
+
+    return {"patient": patient, "doctors": doctors}

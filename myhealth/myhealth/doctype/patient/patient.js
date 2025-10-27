@@ -1,8 +1,16 @@
-// Copyright (c) 2025, Karen and contributors
-// For license information, please see license.txt
+frappe.ui.form.on('Patient', {
+    validate: function(frm) {
+        if (frm.doc.age && frm.doc.age <= 0) {
+            frappe.throw(__('Age must be greater than zero'));
+        }
 
-// frappe.ui.form.on("Patient", {
-// 	refresh(frm) {
+        if (frm.doc.phone_number && !/^\+?\d{10,15}$/.test(frm.doc.phone_number)) {
+            frappe.throw(__('Please enter a valid phone number'));
+        }
 
-// 	},
-// });
+        if (!frm.doc.first_name || !frm.doc.last_name) {
+            frappe.throw(__('First and last name are required'));
+        }
+    }
+});
+

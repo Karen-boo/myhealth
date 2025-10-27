@@ -34,6 +34,17 @@ override_whitelisted_methods.update({
     "myhealth.myhealth.api.doctor_api.deactivate_doctor": "myhealth.myhealth.api.doctor_api.deactivate_doctor"
 })
 
+website_route_rules = [
+    {"from_route": "/my-patient", "to_route": "Patient"}
+]
+
+override_whitelisted_methods.update({
+    # Doctor APIs
+    "myhealth.myhealth.api.doctor_api.get_doctor_patients": "myhealth.myhealth.api.doctor_api.get_doctor_patients",
+    
+    # Patient APIs
+    "myhealth.myhealth.api.patient_api.get_patient_doctors": "myhealth.myhealth.api.patient_api.get_patient_doctors"
+})
 
 # Apps
 # ------------------
