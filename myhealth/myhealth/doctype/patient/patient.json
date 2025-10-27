@@ -8,9 +8,13 @@
  "field_order": [
   "first_name",
   "last_name",
+  "full_name",
   "gender",
+  "date_of_birth",
   "age",
-  "email"
+  "email",
+  "blood_group",
+  "marital_status"
  ],
  "fields": [
   {
@@ -25,24 +29,47 @@
   },
   {
    "fieldname": "gender",
-   "fieldtype": "Data",
-   "label": "Gender"
+   "fieldtype": "Select",
+   "label": "Gender",
+   "options": "Male\nFemale\nOther"
   },
   {
    "fieldname": "age",
-   "fieldtype": "Data",
+   "fieldtype": "Read Only",
    "label": "Age"
   },
   {
    "fieldname": "email",
    "fieldtype": "Data",
    "label": "Email"
+  },
+  {
+   "fieldname": "full_name",
+   "fieldtype": "Read Only",
+   "label": "Full Name"
+  },
+  {
+   "fieldname": "date_of_birth",
+   "fieldtype": "Date",
+   "label": "Date of Birth"
+  },
+  {
+   "fieldname": "blood_group",
+   "fieldtype": "Select",
+   "label": "Blood group",
+   "options": "A+\nA-\nB+\nB-\nAB+\nAB-\nO+\nO-"
+  },
+  {
+   "fieldname": "marital_status",
+   "fieldtype": "Select",
+   "label": "Marital Status",
+   "options": "Single\nMarried"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-24 14:52:26.888731",
+ "modified": "2025-10-27 11:53:56.775621",
  "modified_by": "Administrator",
  "module": "Myhealth",
  "name": "Patient",
