@@ -1,0 +1,89 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "DOC-.###",
+ "creation": "2025-10-27 10:52:59.077152",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "first_name",
+  "last_name",
+  "specialization",
+  "email",
+  "phone_number",
+  "availability_status",
+  "years_of_experience",
+  "bio"
+ ],
+ "fields": [
+  {
+   "fieldname": "first_name",
+   "fieldtype": "Data",
+   "label": "First Name"
+  },
+  {
+   "fieldname": "last_name",
+   "fieldtype": "Data",
+   "label": "Last Name"
+  },
+  {
+   "fieldname": "specialization",
+   "fieldtype": "Select",
+   "label": "Specialization",
+   "options": "Dentist\nGeneral practitioner\nSurgeon\nPediatrician"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email"
+  },
+  {
+   "fieldname": "phone_number",
+   "fieldtype": "Data",
+   "label": "Phone Number"
+  },
+  {
+   "fieldname": "availability_status",
+   "fieldtype": "Select",
+   "label": "Availability Status",
+   "options": "Available\nOn leave\nBusy"
+  },
+  {
+   "fieldname": "years_of_experience",
+   "fieldtype": "Int",
+   "label": "Years of Experience"
+  },
+  {
+   "fieldname": "bio",
+   "fieldtype": "Small Text",
+   "label": "Bio"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-10-27 11:01:44.544055",
+ "modified_by": "Administrator",
+ "module": "Myhealth",
+ "name": "Doctor",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

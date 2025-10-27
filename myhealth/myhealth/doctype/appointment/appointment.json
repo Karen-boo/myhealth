@@ -7,7 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "patient",
-  "doctor_name",
+  "doctor",
   "service",
   "service_status",
   "appointment_date",
@@ -15,11 +15,6 @@
   "notes"
  ],
  "fields": [
-  {
-   "fieldname": "doctor_name",
-   "fieldtype": "Data",
-   "label": "Doctor Name"
-  },
   {
    "fieldname": "service",
    "fieldtype": "Select",
@@ -30,7 +25,7 @@
    "fieldname": "service_status",
    "fieldtype": "Select",
    "label": "Service Status",
-   "options": "Pending\nCompleted"
+   "options": "Pending\nCompleted\nCancelled"
   },
   {
    "fieldname": "appointment_date",
@@ -52,12 +47,18 @@
    "fieldtype": "Link",
    "label": "Patient ",
    "options": "Patient"
+  },
+  {
+   "fieldname": "doctor",
+   "fieldtype": "Link",
+   "label": "Doctor ",
+   "options": "Doctor"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-26 21:01:09.620673",
+ "modified": "2025-10-27 11:13:50.705259",
  "modified_by": "Administrator",
  "module": "Myhealth",
  "name": "Appointment",

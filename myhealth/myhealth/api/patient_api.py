@@ -1,6 +1,6 @@
 import frappe
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=False)
 def create_patient(first_name, last_name, age, gender, email):
     # temporarily disable permission check
     frappe.set_user('Administrator')
@@ -17,14 +17,14 @@ def create_patient(first_name, last_name, age, gender, email):
     return {"message": "Patient created successfully", "patient_name": doc.name}
 
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=False)
 def get_patient(name):
     frappe.set_user('Administrator')
     doc = frappe.get_doc("Patient", name)
     return doc.as_dict()
 
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=False)
 def update_patient(name, **kwargs):
     frappe.set_user('Administrator')
     doc = frappe.get_doc("Patient", name)
@@ -36,14 +36,14 @@ def update_patient(name, **kwargs):
     return {"message": "Patient updated successfully"}
 
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=False)
 def delete_patient(name):
     frappe.set_user('Administrator')
     frappe.delete_doc("Patient", name, ignore_permissions=True)
     frappe.db.commit()
     return {"message": "Patient deleted successfully"}
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=False)
 def list_patients():
     frappe.set_user('Administrator')
     patients = frappe.get_all("Patient", fields=["name", "first_name", "last_name", "age", "gender", "email"])

@@ -6,10 +6,34 @@ app_email = "karenkagai4@gmail.com"
 app_license = "mit"
 
 override_whitelisted_methods = {
+    # Appointment API
     "myhealth.myhealth.api.appointment_api.create_appointment": "myhealth.myhealth.api.appointment_api.create_appointment",
     "myhealth.myhealth.api.appointment_api.get_appointments": "myhealth.myhealth.api.appointment_api.get_appointments",
     "myhealth.myhealth.api.appointment_api.update_appointment": "myhealth.myhealth.api.appointment_api.update_appointment",
 }
+
+override_whitelisted_methods = {
+    # Patient API
+    "myhealth.api.patient_api.create_patient": "myhealth.myhealth.api.patient_api.create_patient",
+    "myhealth.api.patient_api.get_patient": "myhealth.myhealth.api.patient_api.get_patient",
+    "myhealth.api.patient_api.update_patient": "myhealth.myhealth.api.patient_api.update_patient",
+    "myhealth.api.patient_api.delete_patient": "myhealth.myhealth.api.patient_api.delete_patient",
+    "myhealth.api.patient_api.list_patients": "myhealth.myhealth.api.patient_api.list_patients",
+}
+
+doc_events = {}
+override_whitelisted_methods = {
+    "myhealth.myhealth.api.appointment_api.get_appointment_summary": 
+        "myhealth.myhealth.api.appointment_api.get_appointment_summary"
+}
+
+override_whitelisted_methods.update({
+    "myhealth.myhealth.api.doctor_api.create_doctor": "myhealth.myhealth.api.doctor_api.create_doctor",
+    "myhealth.myhealth.api.doctor_api.get_doctors": "myhealth.myhealth.api.doctor_api.get_doctors",
+    "myhealth.myhealth.api.doctor_api.update_doctor": "myhealth.myhealth.api.doctor_api.update_doctor",
+    "myhealth.myhealth.api.doctor_api.deactivate_doctor": "myhealth.myhealth.api.doctor_api.deactivate_doctor"
+})
+
 
 # Apps
 # ------------------
