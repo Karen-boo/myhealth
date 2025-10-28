@@ -2,7 +2,7 @@
  "actions": [],
  "allow_rename": 1,
  "autoname": "APT.###",
- "creation": "2025-10-24 21:48:12.688910",
+ "creation": "2025-10-28 10:19:27.543926",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
@@ -12,6 +12,9 @@
   "service_status",
   "appointment_date",
   "appointment_time",
+  "status",
+  "confirmation_sent",
+  "reminder_sent",
   "notes"
  ],
  "fields": [
@@ -53,13 +56,31 @@
    "fieldtype": "Link",
    "label": "Doctor ",
    "options": "Doctor"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Scheduled\nCompleted\nCancelled\nPending\nRescheduled"
+  },
+  {
+   "default": "0",
+   "fieldname": "confirmation_sent",
+   "fieldtype": "Check",
+   "label": "Confirmation Sent"
+  },
+  {
+   "default": "0",
+   "fieldname": "reminder_sent",
+   "fieldtype": "Check",
+   "label": "Reminder Sent"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_calendar_and_gantt": 1,
  "links": [],
- "modified": "2025-10-28 10:17:01.505574",
+ "modified": "2025-10-28 15:37:07.200722",
  "modified_by": "Administrator",
  "module": "Myhealth",
  "name": "Appointment",

@@ -1,6 +1,7 @@
 import frappe
 from frappe.model.document import Document
 from datetime import datetime
+from frappe.utils import add_days, nowdate
 
 # CREATE Appointment
 @frappe.whitelist(allow_guest=False)
@@ -219,3 +220,20 @@ def get_calendar_events(start, end):
         })
 
     return events
+
+@frappe.whitelist(allow_guest=False)
+def check_availability(doctor, appointment_date, appointment_time):
+    """Check if a doctor is available at the given time"""
+    existing = frappe.db.exists(
+        "Appointment",
+        {
+            "doctor": doctor,
+            "appointment_date": appointment_date,
+            "appointment_time": appointment_time,
+            "status": ["!=", "Cancelled"]
+        }
+    )
+    if existing:
+        return {"available": False, "message": "Doctor is already booked at that time."}
+    return {"available": True, "message": "Doctor is available."}
+

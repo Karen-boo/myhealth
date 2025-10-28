@@ -203,3 +203,28 @@ def get_doctor_schedule(doctor=None):
         })
 
     return events
+
+@frappe.whitelist(allow_guest=False)
+def get_doctor_stats(doctor):
+    total_appointments = frappe.db.count("Appointment", {"doctor_name": doctor})
+    upcoming = frappe.db.count("Appointment", {"doctor_name": doctor, "service_status": "Pending"})
+    active_leaves = frappe.db.count("Doctor Leave", {"doctor": doctor, "status": "Approved"})
+    patients_seen = frappe.db.count("Appointment", {"doctor_name": doctor, "service_status": "Completed"})
+
+    return {
+        "total_appointments": total_appointments,
+        "upcoming": upcoming,
+        "active_leaves": active_leaves,
+        "patients_seen": patients_seen
+    }
+
+@frappe.whitelist(allow_guest=True)
+def get_doctor(name):
+    doctor = frappe.get_doc("Doctor", name)
+    return {
+        "name": doctor.name,
+        "full_name": doctor.full_name,
+        "category": doctor.doctor_category,
+        "description": doctor.category_description,
+        "status": doctor.status
+    }

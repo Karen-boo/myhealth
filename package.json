@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/Karen-boo/myhealth/issues"
   },
-  "homepage": "https://github.com/Karen-boo/myhealth#readme"
+  "homepage": "https://github.com/Karen-boo/myhealth#readme",
+  "dependencies": {
+    "fullcalendar": "^3.10.2"
+  }
 }

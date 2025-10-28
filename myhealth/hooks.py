@@ -62,6 +62,18 @@ app_include_js = [
     "/assets/myhealth/js/doctor_dashboard.js"
 ]
 
+scheduler_events = {
+    "daily": ["myhealth.api.appointment_api.send_appointment_reminders"]
+}
+
+override_whitelisted_methods.update({
+    "myhealth.api.waitlist_api.create_waitlist": "myhealth.myhealth.api.waitlist_api.create_waitlist",
+    "myhealth.api.waitlist_api.get_waitlist": "myhealth.myhealth.api.waitlist_api.get_waitlist",
+    "myhealth.api.waitlist_api.update_waitlist": "myhealth.myhealth.api.waitlist_api.update_waitlist",
+    "myhealth.api.waitlist_api.remove_waitlist": "myhealth.myhealth.api.waitlist_api.remove_waitlist"
+})
+
+
 # Apps
 # ------------------
 

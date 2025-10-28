@@ -1,37 +1,49 @@
 frappe.pages['doctor-dashboard'].on_page_load = function(wrapper) {
-    let page = frappe.ui.make_app_page({
+    const page = frappe.ui.make_app_page({
         parent: wrapper,
-        title: 'Doctor Dashboard',
+        title: 'Doctor Dashboard 🩺',
         single_column: true
     });
 
-    // --- FILTER STATE ---
-    let showAppointments = true;
-    let showAvailability = true;
-    let showLeave = true;
-
-    // --- LEGEND ---
-    const legend = `
-        <div style="margin-bottom: 10px;">
-            <span style="background:#4B9CD3; color:white; padding:4px 8px; border-radius:4px;">🩺 Appointments</span>
-            <span style="background:#81C784; color:white; padding:4px 8px; border-radius:4px;">✅ Availability</span>
-            <span style="background:#E57373; color:white; padding:4px 8px; border-radius:4px;">🏖️ Leave</span>
+    // --- DASHBOARD HEADER ---
+    const header = `
+        <div class="flex justify-between items-center mb-4">
+            <div>
+                <h2 class="text-xl font-semibold">Welcome, Dr. ${frappe.session.user_fullname}</h2>
+                <p class="text-sm text-gray-600">Your current overview and schedule</p>
+            </div>
+            <button class="btn btn-primary refresh-btn">🔄 Refresh</button>
         </div>
     `;
 
-    // --- FILTER BUTTONS ---
-    const filterBar = `
-        <div class="flex gap-2 mb-2">
-            <button class="btn btn-default btn-sm toggle-appointments">🩺 Appointments</button>
-            <button class="btn btn-default btn-sm toggle-availability">✅ Availability</button>
-            <button class="btn btn-default btn-sm toggle-leave">🏖️ Leave</button>
-            <button class="btn btn-primary btn-sm refresh-calendar">🔄 Refresh</button>
+    // --- STATS CARDS ---
+    const statsCards = `
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div class="card shadow p-4 bg-blue-100">
+                <h4 class="font-bold text-blue-800">Total Appointments</h4>
+                <p class="text-2xl" id="total_appointments">0</p>
+            </div>
+            <div class="card shadow p-4 bg-green-100">
+                <h4 class="font-bold text-green-800">Upcoming</h4>
+                <p class="text-2xl" id="upcoming_appointments">0</p>
+            </div>
+            <div class="card shadow p-4 bg-yellow-100">
+                <h4 class="font-bold text-yellow-800">Active Leaves</h4>
+                <p class="text-2xl" id="active_leaves">0</p>
+            </div>
+            <div class="card shadow p-4 bg-purple-100">
+                <h4 class="font-bold text-purple-800">Patients Seen</h4>
+                <p class="text-2xl" id="patients_seen">0</p>
+            </div>
         </div>
     `;
 
-    $(wrapper).find('.layout-main-section').append(legend + filterBar + '<div id="calendar"></div>');
+    // --- CALENDAR ---
+    const calendarContainer = `<div id="calendar"></div>`;
 
-    // --- CALENDAR INITIALIZATION ---
+    $(wrapper).find('.layout-main-section').html(header + statsCards + calendarContainer);
+
+    // --- CALENDAR SETUP ---
     $('#calendar').fullCalendar({
         header: {
             left: 'prev,next today',
@@ -45,13 +57,7 @@ frappe.pages['doctor-dashboard'].on_page_load = function(wrapper) {
                 args: { doctor: frappe.session.user },
                 callback: function(r) {
                     if (r.message) {
-                        let events = r.message.filter(e => {
-                            if (e.title.includes('Appointment') && !showAppointments) return false;
-                            if (e.title.includes('Available') && !showAvailability) return false;
-                            if (e.title.includes('Leave') && !showLeave) return false;
-                            return true;
-                        });
-                        callback(events);
+                        callback(r.message);
                     }
                 }
             });
@@ -64,28 +70,36 @@ frappe.pages['doctor-dashboard'].on_page_load = function(wrapper) {
         }
     });
 
-    // --- BUTTON EVENT LISTENERS ---
-    $(wrapper).on('click', '.toggle-appointments', function() {
-        showAppointments = !showAppointments;
+    // --- LOAD STATS FUNCTION ---
+    function load_stats() {
+        frappe.call({
+            method: "myhealth.myhealth.api.doctor_api.get_doctor_stats",
+            args: { doctor: frappe.session.user },
+            callback: function(r) {
+                if (r.message) {
+                    $("#total_appointments").text(r.message.total_appointments);
+                    $("#upcoming_appointments").text(r.message.upcoming);
+                    $("#active_leaves").text(r.message.active_leaves);
+                    $("#patients_seen").text(r.message.patients_seen);
+                }
+            }
+        });
+    }
+
+    // --- REFRESH EVENTS ---
+    $('.refresh-btn').on('click', function() {
         $('#calendar').fullCalendar('refetchEvents');
-        frappe.show_alert(`Appointments ${showAppointments ? 'shown' : 'hidden'}`);
+        load_stats();
+        frappe.show_alert("Dashboard refreshed 🔄");
     });
 
-    $(wrapper).on('click', '.toggle-availability', function() {
-        showAvailability = !showAvailability;
+    // Auto-refresh every 60 seconds
+    setInterval(() => {
         $('#calendar').fullCalendar('refetchEvents');
-        frappe.show_alert(`Availability ${showAvailability ? 'shown' : 'hidden'}`);
-    });
+        load_stats();
+    }, 60000);
 
-    $(wrapper).on('click', '.toggle-leave', function() {
-        showLeave = !showLeave;
-        $('#calendar').fullCalendar('refetchEvents');
-        frappe.show_alert(`Leave ${showLeave ? 'shown' : 'hidden'}`);
-    });
-
-    $(wrapper).on('click', '.refresh-calendar', function() {
-        $('#calendar').fullCalendar('refetchEvents');
-        frappe.show_alert("Calendar refreshed 🔄");
-    });
+    // Initial load
+    load_stats();
 };
 
