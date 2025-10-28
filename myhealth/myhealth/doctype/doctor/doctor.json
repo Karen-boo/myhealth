@@ -6,14 +6,21 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "basic_info_section",
   "first_name",
   "last_name",
+  "full_name",
   "specialization",
-  "email",
+  "qualifications",
+  "contact_info_section",
   "phone_number",
+  "email",
+  "more_info_section",
   "availability_status",
   "years_of_experience",
-  "bio"
+  "department",
+  "bio",
+  "is_active"
  ],
  "fields": [
   {
@@ -46,7 +53,7 @@
    "fieldname": "availability_status",
    "fieldtype": "Select",
    "label": "Availability Status",
-   "options": "Available\nOn leave\nBusy"
+   "options": "Available\nOn leave\nBusy\nUnavailable"
   },
   {
    "fieldname": "years_of_experience",
@@ -57,12 +64,49 @@
    "fieldname": "bio",
    "fieldtype": "Small Text",
    "label": "Bio"
+  },
+  {
+   "fieldname": "basic_info_section",
+   "fieldtype": "Section Break",
+   "label": "Basic Info"
+  },
+  {
+   "fieldname": "full_name",
+   "fieldtype": "Read Only",
+   "label": "Full Name"
+  },
+  {
+   "fieldname": "contact_info_section",
+   "fieldtype": "Section Break",
+   "label": "Contact Info"
+  },
+  {
+   "fieldname": "more_info_section",
+   "fieldtype": "Section Break",
+   "label": "More Info"
+  },
+  {
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department"
+  },
+  {
+   "fieldname": "qualifications",
+   "fieldtype": "Small Text",
+   "label": "Qualifications"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_active",
+   "fieldtype": "Check",
+   "label": "Is Active"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-27 11:01:44.544055",
+ "modified": "2025-10-28 09:47:24.762071",
  "modified_by": "Administrator",
  "module": "Myhealth",
  "name": "Doctor",

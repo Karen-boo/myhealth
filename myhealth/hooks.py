@@ -27,12 +27,12 @@ override_whitelisted_methods = {
         "myhealth.myhealth.api.appointment_api.get_appointment_summary"
 }
 
-override_whitelisted_methods.update({
-    "myhealth.myhealth.api.doctor_api.create_doctor": "myhealth.myhealth.api.doctor_api.create_doctor",
-    "myhealth.myhealth.api.doctor_api.get_doctors": "myhealth.myhealth.api.doctor_api.get_doctors",
-    "myhealth.myhealth.api.doctor_api.update_doctor": "myhealth.myhealth.api.doctor_api.update_doctor",
-    "myhealth.myhealth.api.doctor_api.deactivate_doctor": "myhealth.myhealth.api.doctor_api.deactivate_doctor"
-})
+override_whitelisted_methods = {
+    "myhealth.api.doctor_api.create_doctor": "myhealth.myhealth.api.doctor_api.create_doctor",
+    "myhealth.api.doctor_api.get_doctors": "myhealth.myhealth.api.doctor_api.get_doctors",
+    "myhealth.api.doctor_api.update_doctor": "myhealth.myhealth.api.doctor_api.update_doctor",
+    "myhealth.api.doctor_api.deactivate_doctor": "myhealth.myhealth.api.doctor_api.deactivate_doctor",
+}
 
 website_route_rules = [
     {"from_route": "/my-patient", "to_route": "Patient"}
@@ -45,6 +45,22 @@ override_whitelisted_methods.update({
     # Patient APIs
     "myhealth.myhealth.api.patient_api.get_patient_doctors": "myhealth.myhealth.api.patient_api.get_patient_doctors"
 })
+
+override_whitelisted_methods = {
+    "myhealth.api.doctor_leave_api.apply_leave": "myhealth.myhealth.api.doctor_leave_api.apply_leave",
+    "myhealth.api.doctor_leave_api.approve_leave": "myhealth.myhealth.api.doctor_leave_api.approve_leave",
+    "myhealth.api.doctor_leave_api.end_leave": "myhealth.myhealth.api.doctor_leave_api.end_leave"
+}
+
+scheduler_events = {
+    "daily": [
+        "myhealth.myhealth.api.doctor_leave_api.auto_end_expired_leaves"
+    ]
+}
+
+app_include_js = [
+    "/assets/myhealth/js/doctor_dashboard.js"
+]
 
 # Apps
 # ------------------

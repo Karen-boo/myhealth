@@ -1,0 +1,20 @@
+{
+  "name": "myhealth",
+  "version": "1.0.0",
+  "description": "Health",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Karen-boo/myhealth.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Karen-boo/myhealth/issues"
+  },
+  "homepage": "https://github.com/Karen-boo/myhealth#readme"
+}

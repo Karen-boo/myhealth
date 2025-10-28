@@ -1,0 +1,92 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "LV.###",
+ "creation": "2025-10-27 15:22:52.292331",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "doctor",
+  "leave_type",
+  "leave_start",
+  "leave_end",
+  "reason",
+  "status",
+  "approved",
+  "attatchment"
+ ],
+ "fields": [
+  {
+   "fieldname": "doctor",
+   "fieldtype": "Link",
+   "label": "Doctor",
+   "options": "Doctor"
+  },
+  {
+   "fieldname": "leave_type",
+   "fieldtype": "Select",
+   "label": "Leave Type",
+   "options": "Vacation\nSick\nPersonal\nConference"
+  },
+  {
+   "fieldname": "reason",
+   "fieldtype": "Small Text",
+   "label": "Reason"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Pending\nApproved\nRejected\nCompleted"
+  },
+  {
+   "fieldname": "approved",
+   "fieldtype": "Link",
+   "label": "Approved",
+   "options": "User"
+  },
+  {
+   "fieldname": "attatchment",
+   "fieldtype": "Attach",
+   "label": "Attatchment"
+  },
+  {
+   "fieldname": "leave_start",
+   "fieldtype": "Date",
+   "label": "Leave Start "
+  },
+  {
+   "fieldname": "leave_end",
+   "fieldtype": "Date",
+   "label": "Leave End "
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-10-28 10:32:09.736580",
+ "modified_by": "Administrator",
+ "module": "Myhealth",
+ "name": "Doctor Leave",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

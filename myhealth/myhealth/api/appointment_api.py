@@ -1,4 +1,6 @@
 import frappe
+from frappe.model.document import Document
+from datetime import datetime
 
 # CREATE Appointment
 @frappe.whitelist(allow_guest=False)
@@ -139,3 +141,81 @@ def get_appointment_summary():
             summary["cancelled"] += 1
 
     return {"summary": summary}
+
+class Appointment(Document):
+    def validate(self):
+        self.validate_doctor_availability()
+
+    def validate_doctor_availability(self):
+        """
+        Prevent appointment booking if doctor is on approved leave
+        """
+        if not self.doctor or not self.appointment_date:
+            return
+
+        # Convert string to date if needed
+        appointment_date = self.appointment_date
+        if isinstance(appointment_date, str):
+            appointment_date = datetime.strptime(appointment_date, "%Y-%m-%d").date()
+
+        # Get approved leaves that overlap with this date
+        overlapping_leave = frappe.get_all(
+            "Doctor Leave",
+            filters={
+                "doctor": self.doctor,
+                "status": "Approved",
+                "leave_start": ("<=", appointment_date),
+                "leave_end": (">=", appointment_date)
+            },
+            fields=["name", "leave_start", "leave_end"]
+        )
+
+        if overlapping_leave:
+            leave = overlapping_leave[0]
+            frappe.throw(
+                f"❌ Doctor {self.doctor} is on approved leave "
+                f"from {leave.leave_start} to {leave.leave_end}. "
+                f"Please select another date or doctor."
+            )
+
+@frappe.whitelist(allow_guest=False)
+def get_calendar_events(start, end):
+    """
+    Fetch appointments between start and end date.
+    If the logged-in user is a Doctor, show only their appointments.
+    """
+    user = frappe.session.user
+
+    # Check if the user is linked to a Doctor profile
+    doctor = frappe.db.get_value("Doctor", {"user_id": user}, "name")
+
+    filters = {"appointment_date": ["between", [start, end]]}
+
+    # If the user is a doctor, filter by their name
+    if doctor:
+        filters["doctor_name"] = doctor
+
+    appointments = frappe.get_all(
+        "Appointment",
+        filters=filters,
+        fields=[
+            "name",
+            "patient",
+            "doctor_name",
+            "service",
+            "service_status",
+            "appointment_date",
+            "appointment_time"
+        ]
+    )
+
+    events = []
+    for a in appointments:
+        events.append({
+            "name": a.name,
+            "title": f"{a.patient} - {a.service}",
+            "start": f"{a.appointment_date}T{a.appointment_time}",
+            "doc": a
+        })
+
+    return events
