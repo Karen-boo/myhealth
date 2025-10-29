@@ -73,6 +73,11 @@ override_whitelisted_methods.update({
     "myhealth.api.waitlist_api.remove_waitlist": "myhealth.myhealth.api.waitlist_api.remove_waitlist"
 })
 
+override_whitelisted_methods.update({
+    "myhealth.api.medical_records_api.create_medical_record": "myhealth.myhealth.api.medical_records_api.create_medical_record",
+    "myhealth.api.medical_records_api.get_medical_records": "myhealth.myhealth.api.medical_records_api.get_medical_records",
+    "myhealth.api.medical_records_api.get_medical_record_details": "myhealth.myhealth.api.medical_records_api.get_medical_record_details"
+})
 
 # Apps
 # ------------------
