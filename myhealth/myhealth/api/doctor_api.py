@@ -174,14 +174,14 @@ def get_doctor_schedule(doctor=None):
     leaves = frappe.get_all(
         "Doctor Leave",
         filters={"doctor": doctor, "status": "Approved"},
-        fields=["from_date", "to_date", "reason", "name"]
+        fields=["leave_start", "leave_end", "reason", "name"]
     )
 
     for l in leaves:
         events.append({
             "title": f"🏖️ Leave: {l.reason or 'On Leave'}",
-            "start": l.from_date,
-            "end": l.to_date,
+            "start": l.leave_start,
+            "end": l.leave_end,
             "color": "#E57373",
             "url": f"/app/doctor-leave/{l.name}"
         })
@@ -190,7 +190,7 @@ def get_doctor_schedule(doctor=None):
     availabilities = frappe.get_all(
         "Doctor Availability",
         filters={"doctor": doctor},
-        fields=["available_from", "available_to", "day_of_week", "name"]
+        fields=["start_time", "end_time", "date", "doctor"]
     )
 
     for av in availabilities:

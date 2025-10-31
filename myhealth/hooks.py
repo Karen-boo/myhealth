@@ -79,6 +79,19 @@ override_whitelisted_methods.update({
     "myhealth.api.medical_records_api.get_medical_record_details": "myhealth.myhealth.api.medical_records_api.get_medical_record_details"
 })
 
+app_include_js = [
+    "/assets/myhealth/js/fullcalendar.min.js"
+]
+app_include_css = [
+    "/assets/myhealth/css/fullcalendar.min.css"
+]
+
+doc_events = {
+    "User": {
+        "after_insert": "myhealth.myhealth.api.patient_api.create_patient_on_user_signup"
+    }
+}
+
 # Apps
 # ------------------
 

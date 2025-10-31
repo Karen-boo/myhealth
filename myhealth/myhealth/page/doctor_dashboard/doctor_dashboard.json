@@ -4,5 +4,6 @@
   "route": "doctor-dashboard",
   "description": "Dashboard for managing doctor appointments, leaves, and availability",
   "doctype": "Doctor",
-  "type": "page"
+  "type": "page",
+  "name": "doctor-dashboard"
 }

@@ -1,0 +1,51 @@
+<div class="max-w-3xl mx-auto p-6 bg-white rounded-2xl shadow-lg">
+  <h2 class="text-2xl font-semibold mb-4 text-gray-800">
+    👩‍⚕️ Welcome, <span id="logged-user" class="text-primary">Loading...</span>
+  </h2>
+
+  <div class="grid grid-cols-2 gap-4 mb-6">
+    <div>
+      <label for="doctor" class="block text-sm font-medium text-gray-700">Select Doctor</label>
+      <select id="doctor" class="form-control mt-1"></select>
+    </div>
+    <div>
+      <label for="service" class="block text-sm font-medium text-gray-700">Service</label>
+      <select id="service" class="form-control mt-1">
+        <option value="">--Select--</option>
+        <option value="Consultation">Consultation</option>
+        <option value="Checkup">Checkup</option>
+      </select>
+    </div>
+    <div>
+      <label for="appointment_date" class="block text-sm font-medium text-gray-700">Date</label>
+      <input type="date" id="appointment_date" class="form-control mt-1">
+    </div>
+    <div>
+      <label for="appointment_time" class="block text-sm font-medium text-gray-700">Time</label>
+      <input type="time" id="appointment_time" class="form-control mt-1">
+    </div>
+  </div>
+
+  <button class="btn btn-primary w-full mb-6" id="book-appointment-btn">
+    Book New Appointment
+  </button>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h4 class="text-lg font-medium text-gray-800 mb-3">Upcoming Appointments</h4>
+      <table class="table table-bordered w-full text-center">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Doctor</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="appointments-body">
+          <tr><td colspan="4" class="text-center text-muted">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

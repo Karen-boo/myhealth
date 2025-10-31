@@ -1,4 +1,5 @@
 import frappe
+from frappe.utils import now_datetime
 
 @frappe.whitelist(allow_guest=False)
 def create_patient(first_name, last_name, age, gender, email):
@@ -100,3 +101,108 @@ def get_patient_doctors(patient):
         })
 
     return {"patient": patient, "doctors": doctors}
+
+@frappe.whitelist()
+def get_patient_appointments(patient=None):
+    """Return list of appointments for a given patient or logged-in user"""
+    user = frappe.session.user
+    if not patient:
+        patient = frappe.db.get_value("Patient", {"user": user}, "name")
+        if not patient:
+            frappe.throw(f"No Patient profile found for user: {user}")
+
+    appointments = frappe.get_all(
+        "Appointment",
+        filters={"patient": patient},
+        fields=[
+            "name",
+            "appointment_date",
+            "appointment_time",
+            "doctor",
+            "service",
+            "status"
+        ],
+        order_by="appointment_date desc"
+    )
+    return appointments
+
+@frappe.whitelist()
+def cancel_appointment(appointment_id):
+    """Cancel appointment by ID"""
+    if not frappe.has_permission("Appointment", "cancel"):
+        frappe.throw("Not permitted to cancel this appointment.")
+
+    appt = frappe.get_doc("Appointment", appointment_id)
+    appt.status = "Cancelled"
+    appt.save(ignore_permissions=True)
+    frappe.db.commit()
+
+    return {"message": f"Appointment {appointment_id} has been cancelled."}
+
+@frappe.whitelist()
+def book_appointment(patient, doctor, appointment_date, appointment_time, service=None):
+    """Book a new appointment"""
+    appt = frappe.get_doc({
+        "doctype": "Appointment",
+        "patient": patient,
+        "doctor": doctor,
+        "appointment_date": appointment_date,
+        "appointment_time": appointment_time,
+        "service": service,
+        "status": "Scheduled"
+    })
+    appt.insert(ignore_permissions=True)
+    frappe.db.commit()
+    return {"message": "Appointment booked successfully!"}
+
+@frappe.whitelist(allow_guest=False)
+def book_appointment(patient=None, doctor=None, appointment_date=None, appointment_time=None, service=None):
+    """Book a new appointment for the logged-in user"""
+
+    if not (patient and doctor and appointment_date and appointment_time and service):
+        frappe.throw("All fields are required to book an appointment.")
+
+    # Get Patient linked to user (if exists)
+    patient_doc = frappe.db.get_value("Patient", {"user": patient}, "name")
+    if not patient_doc:
+        frappe.throw("No Patient profile found for this user. Please create one first.")
+
+    # Create appointment document
+    appointment = frappe.get_doc({
+        "doctype": "Appointment",
+        "patient": patient_doc,
+        "doctor": doctor,
+        "appointment_date": appointment_date,
+        "appointment_time": appointment_time,
+        "service": service,
+        "status": "Scheduled",
+        "creation": now_datetime(),
+    })
+    appointment.insert(ignore_permissions=True)
+    frappe.db.commit()
+
+    return {"message": "Appointment booked successfully", "appointment_id": appointment.name}
+
+def create_patient_on_user_signup(doc, method):
+    """Automatically create a Patient record when a new User is added."""
+    # Avoid duplicates
+    if frappe.db.exists("Patient", {"user": doc.name}):
+        return
+
+    # Create new Patient
+    patient = frappe.get_doc({
+        "doctype": "Patient",
+        "first_name": doc.first_name or doc.full_name or doc.name,
+        "email": doc.email,
+        "user": doc.name
+    })
+    patient.insert(ignore_permissions=True)
+    frappe.db.commit()
+    frappe.logger().info(f"✅ Auto-created Patient for user: {doc.name}")
+
+
+@frappe.whitelist()
+def get_doctors():
+    """Return a list of all doctors"""
+    doctors = frappe.get_all("Doctor", fields=["name", "full_name"])
+    return doctors

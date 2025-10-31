@@ -22,7 +22,7 @@
    "fieldname": "head_of_department",
    "fieldtype": "Link",
    "label": "Head of Department",
-   "options": "Doctor"
+   "options": "User"
   },
   {
    "fieldname": "description",
@@ -34,7 +34,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-10-27 15:06:25.769099",
+ "modified": "2025-10-29 23:10:59.253411",
  "modified_by": "Administrator",
  "module": "Myhealth",
  "name": "Department",

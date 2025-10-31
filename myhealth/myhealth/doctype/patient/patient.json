@@ -24,7 +24,8 @@
   "insurance_provider",
   "id_document",
   "insurance_card",
-  "status"
+  "status",
+  "user"
  ],
  "fields": [
   {
@@ -125,12 +126,18 @@
    "fieldname": "insurance_info_section",
    "fieldtype": "Section Break",
    "label": "Insurance Info"
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "User",
+   "options": "User"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-27 12:30:57.969709",
+ "modified": "2025-10-30 10:24:49.589256",
  "modified_by": "Administrator",
  "module": "Myhealth",
  "name": "Patient",
