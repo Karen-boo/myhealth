@@ -85,3 +85,11 @@ def auto_end_expired_leaves():
 
     for leave in expired_leaves:
         end_leave(leave.name)
+
+@frappe.whitelist()
+def get_doctor_leaves(doctor):
+    return frappe.get_all(
+        "Doctor Leave",
+        filters={"doctor": doctor},
+        fields=["from_date", "to_date", "reason", "status"]
+    )

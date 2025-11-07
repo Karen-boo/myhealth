@@ -144,62 +144,75 @@ def delete_doctor(name):
 
     return {"message": "Doctor deleted successfully"}
 
-@frappe.whitelist(allow_guest=False)
-def get_doctor_schedule(doctor=None):
+@frappe.whitelist()
+def get_doctor_schedule(doctor):
     """
-    Returns combined calendar events (availability, appointments, leave)
-    for the doctor dashboard.
+    Return combined schedule for a doctor: appointments + leaves.
+    Output is used by the frontend calendar.
     """
-    if not doctor:
-        doctor = frappe.session.user
 
     events = []
 
-    # --- 1️⃣ Appointments ---
+    # --- 🩺 1. Appointments ---
     appointments = frappe.get_all(
         "Appointment",
         filters={"doctor": doctor},
-        fields=["name", "patient", "appointment_date", "status"]
+        fields=[
+            "name",
+            "patient",
+            "appointment_date",
+            "appointment_time",
+            "status"
+        ]
     )
 
     for a in appointments:
+        if not a.appointment_date or not a.appointment_time:
+            continue
+
+        start_time = f"{a.appointment_date}T{a.appointment_time}"
+
+        color = "#2196F3"  # Blue default
+        if a.status == "Completed":
+            color = "#4CAF50"
+        elif a.status == "Cancelled":
+            color = "#F44336"
+        elif a.status == "Pending":
+            color = "#FFC107"
+
         events.append({
-            "title": f"🩺 Appointment: {a.patient}",
-            "start": a.appointment_date,
-            "color": "#4B9CD3" if a.status == "Confirmed" else "#F9A825",
+            "title": f"Appointment - {a.patient}",
+            "start": start_time,
+            "end": start_time,
+            "color": color,
             "url": f"/app/appointment/{a.name}"
         })
 
-    # --- 2️⃣ Doctor Leave ---
+    # --- 🏖️ 2. Doctor Leaves ---
     leaves = frappe.get_all(
         "Doctor Leave",
-        filters={"doctor": doctor, "status": "Approved"},
-        fields=["leave_start", "leave_end", "reason", "name"]
+        filters={"doctor": doctor, "status": ["in", ["Pending", "Approved"]]},
+        fields=["name", "leave_type", "leave_start", "leave_end", "status"]
     )
 
     for l in leaves:
-        events.append({
-            "title": f"🏖️ Leave: {l.reason or 'On Leave'}",
-            "start": l.leave_start,
-            "end": l.leave_end,
-            "color": "#E57373",
-            "url": f"/app/doctor-leave/{l.name}"
-        })
+        if not l.leave_start or not l.leave_end:
+            continue
 
-    # --- 3️⃣ Doctor Availability ---
-    availabilities = frappe.get_all(
-        "Doctor Availability",
-        filters={"doctor": doctor},
-        fields=["start_time", "end_time", "date", "doctor"]
-    )
+        # +1 day to include the end date fully
+        end_date = (
+            datetime.datetime.strptime(str(l.leave_end), "%Y-%m-%d")
+            + datetime.timedelta(days=1)
+        ).strftime("%Y-%m-%d")
 
-    for av in availabilities:
+        color = "#F44336" if l.status == "Approved" else "#FFB300"
+
         events.append({
-            "title": f"✅ Available ({av.day_of_week})",
-            "start": av.available_from,
-            "end": av.available_to,
-            "color": "#81C784",
-            "url": f"/app/doctor-availability/{av.name}"
+            "title": f"{l.leave_type} Leave",
+            "start": str(l.leave_start),
+            "end": end_date,
+            "color": color,
+            "display": "background",  # ✅ renders as shaded blocks
         })
 
     return events
