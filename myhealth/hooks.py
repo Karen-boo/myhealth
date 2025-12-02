@@ -2,94 +2,112 @@ app_name = "myhealth"
 app_title = "Myhealth"
 app_publisher = "Karen"
 app_description = "Health"
-app_email = "karenkagai4@gmail.com"
-app_license = "mit"
+app_email = "[karenkagai4@gmail.com](mailto:karenkagai4@gmail.com)"
+app_license = "MIT"
+
+# ---------------------------
+
+# Override Whitelisted Methods
+
+# ---------------------------
 
 override_whitelisted_methods = {
-    # Appointment API
-    "myhealth.myhealth.api.appointment_api.create_appointment": "myhealth.myhealth.api.appointment_api.create_appointment",
-    "myhealth.myhealth.api.appointment_api.get_appointments": "myhealth.myhealth.api.appointment_api.get_appointments",
-    "myhealth.myhealth.api.appointment_api.update_appointment": "myhealth.myhealth.api.appointment_api.update_appointment",
+# Appointment API
+"myhealth.myhealth.api.appointment_api.create_appointment": "myhealth.myhealth.api.appointment_api.create_appointment",
+"myhealth.myhealth.api.appointment_api.get_appointments": "myhealth.myhealth.api.appointment_api.get_appointments",
+"myhealth.myhealth.api.appointment_api.update_appointment": "myhealth.myhealth.api.appointment_api.update_appointment",
+"myhealth.myhealth.api.appointment_api.get_appointment_summary": "myhealth.myhealth.api.appointment_api.get_appointment_summary",
+"myhealth.myhealth.api.appointment_api.get_doctors": "myhealth.myhealth.api.appointment_api.get_doctors",
+"myhealth.myhealth.api.appointment_api.get_patient_appointments": "myhealth.myhealth.api.appointment_api.get_patient_appointments",
+
+# Patient API
+"myhealth.myhealth.api.patient_api.create_patient": "myhealth.myhealth.api.patient_api.create_patient",
+"myhealth.myhealth.api.patient_api.get_patient": "myhealth.myhealth.api.patient_api.get_patient",
+"myhealth.myhealth.api.patient_api.update_patient": "myhealth.myhealth.api.patient_api.update_patient",
+"myhealth.myhealth.api.patient_api.delete_patient": "myhealth.myhealth.api.patient_api.delete_patient",
+"myhealth.myhealth.api.patient_api.list_patients": "myhealth.myhealth.api.patient_api.list_patients",
+"myhealth.myhealth.api.patient_api.get_patient_doctors": "myhealth.myhealth.api.patient_api.get_patient_doctors",
+
+# Doctor API
+"myhealth.myhealth.api.doctor_api.create_doctor": "myhealth.myhealth.api.doctor_api.create_doctor",
+"myhealth.myhealth.api.doctor_api.get_doctors": "myhealth.myhealth.api.doctor_api.get_doctors",
+"myhealth.myhealth.api.doctor_api.update_doctor": "myhealth.myhealth.api.doctor_api.update_doctor",
+"myhealth.myhealth.api.doctor_api.deactivate_doctor": "myhealth.myhealth.api.doctor_api.deactivate_doctor",
+"myhealth.myhealth.api.doctor_api.get_doctor_patients": "myhealth.myhealth.api.doctor_api.get_doctor_patients",
+
+# Doctor Leave API
+"myhealth.myhealth.api.doctor_leave_api.apply_leave": "myhealth.myhealth.api.doctor_leave_api.apply_leave",
+"myhealth.myhealth.api.doctor_leave_api.approve_leave": "myhealth.myhealth.api.doctor_leave_api.approve_leave",
+"myhealth.myhealth.api.doctor_leave_api.end_leave": "myhealth.myhealth.api.doctor_leave_api.end_leave",
+
+# Waitlist API
+"myhealth.myhealth.api.waitlist_api.create_waitlist": "myhealth.myhealth.api.waitlist_api.create_waitlist",
+"myhealth.myhealth.api.waitlist_api.get_waitlist": "myhealth.myhealth.api.waitlist_api.get_waitlist",
+"myhealth.myhealth.api.waitlist_api.update_waitlist": "myhealth.myhealth.api.waitlist_api.update_waitlist",
+"myhealth.myhealth.api.waitlist_api.remove_waitlist": "myhealth.myhealth.api.waitlist_api.remove_waitlist",
+
+# Medical Records API
+"myhealth.myhealth.api.medical_records_api.create_medical_record": "myhealth.myhealth.api.medical_records_api.create_medical_record",
+"myhealth.myhealth.api.medical_records_api.get_medical_records": "myhealth.myhealth.api.medical_records_api.get_medical_records",
+"myhealth.myhealth.api.medical_records_api.get_medical_record_details": "myhealth.myhealth.api.medical_records_api.get_medical_record_details"
 }
 
-override_whitelisted_methods = {
-    # Patient API
-    "myhealth.api.patient_api.create_patient": "myhealth.myhealth.api.patient_api.create_patient",
-    "myhealth.api.patient_api.get_patient": "myhealth.myhealth.api.patient_api.get_patient",
-    "myhealth.api.patient_api.update_patient": "myhealth.myhealth.api.patient_api.update_patient",
-    "myhealth.api.patient_api.delete_patient": "myhealth.myhealth.api.patient_api.delete_patient",
-    "myhealth.api.patient_api.list_patients": "myhealth.myhealth.api.patient_api.list_patients",
-}
+# ---------------------------
 
-doc_events = {}
-override_whitelisted_methods = {
-    "myhealth.myhealth.api.appointment_api.get_appointment_summary": 
-        "myhealth.myhealth.api.appointment_api.get_appointment_summary"
-}
+# Document Events
 
-override_whitelisted_methods = {
-    "myhealth.api.doctor_api.create_doctor": "myhealth.myhealth.api.doctor_api.create_doctor",
-    "myhealth.api.doctor_api.get_doctors": "myhealth.myhealth.api.doctor_api.get_doctors",
-    "myhealth.api.doctor_api.update_doctor": "myhealth.myhealth.api.doctor_api.update_doctor",
-    "myhealth.api.doctor_api.deactivate_doctor": "myhealth.myhealth.api.doctor_api.deactivate_doctor",
-}
-
-website_route_rules = [
-    {"from_route": "/my-patient", "to_route": "Patient"}
-]
-
-override_whitelisted_methods.update({
-    # Doctor APIs
-    "myhealth.myhealth.api.doctor_api.get_doctor_patients": "myhealth.myhealth.api.doctor_api.get_doctor_patients",
-    
-    # Patient APIs
-    "myhealth.myhealth.api.patient_api.get_patient_doctors": "myhealth.myhealth.api.patient_api.get_patient_doctors"
-})
-
-override_whitelisted_methods = {
-    "myhealth.api.doctor_leave_api.apply_leave": "myhealth.myhealth.api.doctor_leave_api.apply_leave",
-    "myhealth.api.doctor_leave_api.approve_leave": "myhealth.myhealth.api.doctor_leave_api.approve_leave",
-    "myhealth.api.doctor_leave_api.end_leave": "myhealth.myhealth.api.doctor_leave_api.end_leave"
-}
-
-scheduler_events = {
-    "daily": [
-        "myhealth.myhealth.api.doctor_leave_api.auto_end_expired_leaves"
-    ]
-}
-
-app_include_js = [
-    "/assets/myhealth/js/doctor_dashboard.js"
-]
-
-scheduler_events = {
-    "daily": ["myhealth.api.appointment_api.send_appointment_reminders"]
-}
-
-override_whitelisted_methods.update({
-    "myhealth.api.waitlist_api.create_waitlist": "myhealth.myhealth.api.waitlist_api.create_waitlist",
-    "myhealth.api.waitlist_api.get_waitlist": "myhealth.myhealth.api.waitlist_api.get_waitlist",
-    "myhealth.api.waitlist_api.update_waitlist": "myhealth.myhealth.api.waitlist_api.update_waitlist",
-    "myhealth.api.waitlist_api.remove_waitlist": "myhealth.myhealth.api.waitlist_api.remove_waitlist"
-})
-
-override_whitelisted_methods.update({
-    "myhealth.api.medical_records_api.create_medical_record": "myhealth.myhealth.api.medical_records_api.create_medical_record",
-    "myhealth.api.medical_records_api.get_medical_records": "myhealth.myhealth.api.medical_records_api.get_medical_records",
-    "myhealth.api.medical_records_api.get_medical_record_details": "myhealth.myhealth.api.medical_records_api.get_medical_record_details"
-})
-
-app_include_js = [
-    "/assets/myhealth/js/fullcalendar.min.js"
-]
-app_include_css = [
-    "/assets/myhealth/css/fullcalendar.min.css"
-]
+# ---------------------------
 
 doc_events = {
-    "User": {
-        "after_insert": "myhealth.myhealth.api.patient_api.create_patient_on_user_signup"
-    }
+"User": {
+"after_insert": "myhealth.myhealth.api.patient_api.create_patient_on_user_signup"
+}
+}
+
+# ---------------------------
+
+# Website Routing
+
+# ---------------------------
+
+website_route_rules = [
+{"from_route": "/my-patient", "to_route": "Patient"}
+]
+
+# ---------------------------
+
+# Scheduler Events
+
+# ---------------------------
+
+scheduler_events = {
+"daily": [
+"myhealth.myhealth.api.doctor_leave_api.auto_end_expired_leaves",
+"myhealth.myhealth.api.appointment_api.send_appointment_reminders"
+]
+}
+
+# ---------------------------
+
+# Include JS & CSS Assets
+
+# ---------------------------
+
+app_include_js = [
+"/assets/myhealth/js/fullcalendar.min.js"
+]
+app_include_css = [
+"/assets/myhealth/css/fullcalendar.min.css"
+]
+
+# hooks.py
+page_js = {
+    "patient_portal": "myhealth.myhealth.page.patient_portal.patient_portal.js"
+}
+
+override_whitelisted_methods = {}
+page_js = {
+    "new_patient": "myhealth.myhealth.page.new_patient.new_patient.js"
 }
 
 # Apps

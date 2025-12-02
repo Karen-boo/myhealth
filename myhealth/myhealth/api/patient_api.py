@@ -66,6 +66,12 @@ def upload_patient_files(patient, id_document=None, insurance_card=None):
     return {"message": "Files uploaded successfully"}
 
 @frappe.whitelist(allow_guest=False)
+def get_logged_in_patient():
+    """Return the Patient ID linked to the logged-in user"""
+    patient_id = frappe.db.get_value("Patient", {"user": frappe.session.user}, "name")
+    return patient_id
+
+@frappe.whitelist(allow_guest=False)
 def get_patient_history(patient):
     """Return a patient's appointments and related info"""
     appointments = frappe.get_all(
@@ -102,29 +108,32 @@ def get_patient_doctors(patient):
 
     return {"patient": patient, "doctors": doctors}
 
-@frappe.whitelist()
-def get_patient_appointments(patient=None):
-    """Return list of appointments for a given patient or logged-in user"""
-    user = frappe.session.user
-    if not patient:
-        patient = frappe.db.get_value("Patient", {"user": user}, "name")
-        if not patient:
-            frappe.throw(f"No Patient profile found for user: {user}")
-
+@frappe.whitelist(allow_guest=False)
+def get_patient_appointments(patient):
+    """
+    Returns ONLY the logged-in patient's appointments
+    """
     appointments = frappe.get_all(
         "Appointment",
         filters={"patient": patient},
         fields=[
             "name",
-            "appointment_date",
-            "appointment_time",
             "doctor",
             "service",
+            "appointment_date",
+            "start_time",
+            "end_time",
             "status"
         ],
-        order_by="appointment_date desc"
+        order_by="appointment_date desc, start_time asc"
     )
+
+    # Add doctor name for display
+    for a in appointments:
+        a["doctor_name"] = frappe.db.get_value("Doctor", a["doctor"], "full_name")
+
     return appointments
+
 
 @frappe.whitelist()
 def cancel_appointment(appointment_id):
@@ -140,14 +149,15 @@ def cancel_appointment(appointment_id):
     return {"message": f"Appointment {appointment_id} has been cancelled."}
 
 @frappe.whitelist()
-def book_appointment(patient, doctor, appointment_date, appointment_time, service=None):
+def book_appointment(patient, doctor, appointment_date, start_time, end_time,  service=None):
     """Book a new appointment"""
     appt = frappe.get_doc({
         "doctype": "Appointment",
         "patient": patient,
         "doctor": doctor,
         "appointment_date": appointment_date,
-        "appointment_time": appointment_time,
+        "start_time": start_time,
+        "end_time": end_time,
         "service": service,
         "status": "Scheduled"
     })
@@ -156,10 +166,10 @@ def book_appointment(patient, doctor, appointment_date, appointment_time, servic
     return {"message": "Appointment booked successfully!"}
 
 @frappe.whitelist(allow_guest=False)
-def book_appointment(patient=None, doctor=None, appointment_date=None, appointment_time=None, service=None):
+def book_appointment(patient=None, doctor=None, appointment_date=None, start_time=None, end_time=None, service=None):
     """Book a new appointment for the logged-in user"""
 
-    if not (patient and doctor and appointment_date and appointment_time and service):
+    if not (patient and doctor and appointment_date and start_time and end_time and service):
         frappe.throw("All fields are required to book an appointment.")
 
     # Get Patient linked to user (if exists)
@@ -173,7 +183,8 @@ def book_appointment(patient=None, doctor=None, appointment_date=None, appointme
         "patient": patient_doc,
         "doctor": doctor,
         "appointment_date": appointment_date,
-        "appointment_time": appointment_time,
+        "start_time": start_time,
+        "end_time": end_time,
         "service": service,
         "status": "Scheduled",
         "creation": now_datetime(),

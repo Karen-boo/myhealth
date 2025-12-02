@@ -21,17 +21,20 @@
   "years_of_experience",
   "department",
   "bio",
-  "is_active"
+  "is_active",
+  "user"
  ],
  "fields": [
   {
    "fieldname": "first_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "First Name"
   },
   {
    "fieldname": "last_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Last Name"
   },
   {
@@ -68,6 +71,7 @@
   {
    "fieldname": "full_name",
    "fieldtype": "Read Only",
+   "in_list_view": 1,
    "label": "Full Name"
   },
   {
@@ -107,12 +111,18 @@
    "fieldname": "category_description",
    "fieldtype": "Data",
    "label": "Category Description"
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "User",
+   "options": "User"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-28 15:27:43.987052",
+ "modified": "2025-11-20 14:36:20.265369",
  "modified_by": "Administrator",
  "module": "Myhealth",
  "name": "Doctor",

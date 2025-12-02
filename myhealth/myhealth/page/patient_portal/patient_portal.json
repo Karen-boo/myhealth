@@ -1,19 +1,5 @@
 {
- "content": null,
- "creation": "2025-11-03 09:30:42.437092",
- "docstatus": 0,
- "doctype": "Page",
- "idx": 0,
- "modified": "2025-11-03 09:30:42.437092",
- "modified_by": "Administrator",
- "module": "Myhealth",
- "name": "patient_portal",
- "owner": "Administrator",
- "page_name": "patient_portal",
- "roles": [],
- "script": null,
- "standard": "Yes",
- "style": null,
- "system_page": 0,
- "title": "Patient Portal"
+  "page_name": "patient_portal",
+  "title": "Patient Portal",
+  "roles": ["Patient"]
 }

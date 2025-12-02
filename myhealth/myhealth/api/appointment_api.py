@@ -3,10 +3,21 @@ from frappe.model.document import Document
 from datetime import datetime
 from frappe.utils import add_days, nowdate
 
-# CREATE Appointment
+# In myhealth/myhealth/api/appointment_api.py
+
 @frappe.whitelist(allow_guest=False)
-def create_appointment(patient, doctor, service, appointment_date, appointment_time, notes=None):
+def create_appointment(patient, doctor, service, appointment_date, start_time, end_time, notes=None):
     """Create a new appointment (with double-booking prevention)"""
+    
+    # --- CRITICAL FIX START ---
+    # The 'patient' argument is now the correct Patient ID (e.g., PAT012)
+    # because the frontend uses the result of get_patient_id_for_user.
+    patient_id = patient 
+    
+    # Validation: Ensure the Patient ID actually exists before proceeding.
+    if not frappe.db.exists("Patient", patient_id):
+         frappe.throw(f"Patient ID {patient_id} does not exist. Please check the Patient DocType.")
+    # --- CRITICAL FIX END ---
     
     # Check if doctor is already booked at that date and time
     existing = frappe.get_all(
@@ -14,24 +25,26 @@ def create_appointment(patient, doctor, service, appointment_date, appointment_t
         filters={
             "doctor": doctor,
             "appointment_date": appointment_date,
-            "appointment_time": appointment_time,
+            "start_time": start_time,
+            "end_time": end_time,
             "service_status": ["!=", "Cancelled"]
         },
         fields=["name", "service_status"]
     )
 
     if existing:
-        frappe.throw(f"Doctor already has an appointment at {appointment_date} {appointment_time}")
+        frappe.throw(f"Doctor already has an appointment at {appointment_date} {start_time} {end_time}")
 
     # Otherwise, create new appointment
     doc = frappe.get_doc({
         "doctype": "Appointment",
-        "patient": patient,
+        "patient": patient_id, # Use the directly provided Patient ID
         "doctor": doctor,
         "service": service,
         "service_status": "Pending",
         "appointment_date": appointment_date,
-        "appointment_time": appointment_time,
+        "start_time": start_time,
+        "end_time": end_time,
         "notes": notes
     })
     doc.insert(ignore_permissions=True)
@@ -66,7 +79,7 @@ def get_appointments(patient_id=None, service_status=None, doctor=None,
         "Appointment",
         filters=filters,
         fields=["name", "patient", "doctor", "service", "service_status",
-                "appointment_date", "appointment_time", "notes"]
+                "appointment_date", "start_time", "end_time", "notes"]
     )
 
     results = []
@@ -180,56 +193,93 @@ class Appointment(Document):
             )
 
 @frappe.whitelist(allow_guest=False)
-def get_calendar_events(start, end):
-    """
-    Fetch appointments between start and end date.
-    If the logged-in user is a Doctor, show only their appointments.
-    """
-    user = frappe.session.user
+def get_doctors():
+    """Fetch all available doctors"""
+    doctors = frappe.get_all("Doctor", fields=["name", "full_name", "specialization"])
+    return doctors
 
-    # Check if the user is linked to a Doctor profile
-    doctor = frappe.db.get_value("Doctor", {"user_id": user}, "name")
-
-    filters = {"appointment_date": ["between", [start, end]]}
-
-    # If the user is a doctor, filter by their name
-    if doctor:
-        filters["doctor_name"] = doctor
+@frappe.whitelist(allow_guest=False)
+def get_patient_appointments(patient=None):
+    if not patient:
+        patient = frappe.session.user
 
     appointments = frappe.get_all(
         "Appointment",
-        filters=filters,
-        fields=[
-            "name",
-            "patient",
-            "doctor_name",
-            "service",
-            "service_status",
-            "appointment_date",
-            "appointment_time"
-        ]
+        filters={"patient": patient},
+        fields=["name", "doctor", "service", "service_status", "appointment_date", "start_time", "end_time"]
+    )
+
+    results = []
+    for a in appointments:
+        doctor_name = frappe.db.get_value("Doctor", a.get("doctor"), "full_name") or a.get("doctor")
+        results.append({
+            "name": a.get("name"),
+            "doctor": a.get("doctor"),
+            "doctor_name": doctor_name,
+            "service": a.get("service"),
+            "status": a.get("service_status"),
+            "appointment_date": a.get("appointment_date"),
+            "start_time": a.get("start_time"),
+            "end_time": a.get("end_time")
+        })
+    return results
+
+@frappe.whitelist(allow_guest=False)
+def get_calendar_events():
+    """
+    Fetch appointments for the logged-in doctor only,
+    including start_time and end_time.
+    """
+    user = frappe.session.user
+
+    # First try match by email
+    doctor = frappe.db.get_value("Doctor", {"email": user}, "name")
+
+    # If no match, try full_name
+    if not doctor:
+        full_name = frappe.db.get_value("User", user, "full_name")
+        doctor = frappe.db.get_value("Doctor", {"full_name": full_name}, "name")
+
+    if not doctor:
+        return []
+
+    appointments = frappe.get_all(
+        "Appointment",
+        filters={"doctor": doctor},
+        fields=["name", "patient", "service", "appointment_date", "start_time", "end_time", "status"]
     )
 
     events = []
     for a in appointments:
+        start = f"{a.appointment_date}T{a.start_time}"
+        end = f"{a.appointment_date}T{a.end_time}"
+
+        color = "#4B9CD3"  # default
+        if a.status == "Completed":
+            color = "#81C784"
+        elif a.status == "Cancelled":
+            color = "#E57373"
+
         events.append({
             "name": a.name,
             "title": f"{a.patient} - {a.service}",
-            "start": f"{a.appointment_date}T{a.appointment_time}",
-            "doc": a
+            "start": start,
+            "end": end,
+            "color": color
         })
 
     return events
 
 @frappe.whitelist(allow_guest=False)
-def check_availability(doctor, appointment_date, appointment_time):
+def check_availability(doctor, appointment_date, start_time, end_time):
     """Check if a doctor is available at the given time"""
     existing = frappe.db.exists(
         "Appointment",
         {
             "doctor": doctor,
             "appointment_date": appointment_date,
-            "appointment_time": appointment_time,
+            "start_time": start_time,
+            "end_time": end_time,
             "status": ["!=", "Cancelled"]
         }
     )
@@ -237,3 +287,21 @@ def check_availability(doctor, appointment_date, appointment_time):
         return {"available": False, "message": "Doctor is already booked at that time."}
     return {"available": True, "message": "Doctor is available."}
 
+@frappe.whitelist(allow_guest=False)
+def get_patient_id_for_user():
+    """Maps the logged-in User ID (email/username) to the Patient DocType Name."""
+    user_id = frappe.session.user
+    
+    # 1. Try matching the Patient DocType by the 'Email' field
+    # (Since your User ID is likely the email, this is the most reliable link)
+    patient_doc_name = frappe.db.get_value("Patient", {"email": user_id}, "name")
+    
+    # 2. Fallback: Try matching by the 'User' Link field
+    if not patient_doc_name and frappe.db.exists("User", user_id):
+        patient_doc_name = frappe.db.get_value("Patient", {"user": user_id}, "name")
+         
+    if not patient_doc_name:
+        # Frappe will display this message to the user if no patient record is found
+        frappe.throw(f"No Patient record found for the user: {user_id}. Please ensure your Patient DocType's 'Email' field matches your login email.")
+        
+    return patient_doc_name

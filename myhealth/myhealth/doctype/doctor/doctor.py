@@ -8,9 +8,9 @@ class Doctor(Document):
         Keep full_name synced with first_name + last_name
         """
         if self.first_name and self.last_name:
-            self.full_name = f"{self.first_name} {self.last_name}"
+            self.full_name = f"Dr.{self.first_name} {self.last_name}"
         elif self.first_name:
-            self.full_name = f"{self.first_name}"
+            self.full_name = f"Dr.{self.first_name}"
         else:
-            self.full_name = "Unknown"
+            self.full_name = "Dr.Unknown"
 

@@ -1,99 +1,66 @@
-frappe.pages["patient-portal"].on_page_load = function (wrapper) {
-  const page = frappe.ui.make_app_page({
-    parent: wrapper,
-    title: "👩‍⚕️ Patient Portal",
-    single_column: true,
-  });
+frappe.provide('frappe.pages.patient_portal');
 
-  $(page.body).html(frappe.render_template("patient_portal", {}));
-
-  // Set footer year
-  document.getElementById("footer-year").textContent = new Date().getFullYear();
-
-  // Load doctors
-  function load_doctors() {
-    frappe.call({
-      method: "myhealth.myhealth.api.patient_api.get_doctors",
-      callback: function (r) {
-        const doctorSelect = $("#doctor");
-        doctorSelect.empty().append('<option value="">-- Select Doctor --</option>');
-        (r.message || []).forEach((doc) => {
-          doctorSelect.append(
-            `<option value="${doc.name}">${doc.doctor_name || doc.name}</option>`
-          );
-        });
-      },
+frappe.pages.patient_portal.on_page_load = function(wrapper) {
+    const page = frappe.ui.make_app_page({
+        parent: wrapper,
+        title: 'Patient Portal 🩺',
+        single_column: true
     });
-  }
 
-  // Load appointments
-  function load_appointments() {
-    frappe.call({
-      method: "myhealth.myhealth.api.patient_api.get_patient_appointments",
-      args: { patient: frappe.session.user },
-      callback: function (r) {
-        const body = $("#appointments-body");
-        body.empty();
+    // Inject HTML
+    $(wrapper).find('.layout-main-section').html(frappe.render_template('patient_portal', {}));
 
-        if (r.message && r.message.length > 0) {
-          r.message.forEach((app) => {
-            const statusColor =
-              app.status === "Confirmed"
-                ? "text-success"
-                : app.status === "Pending"
-                ? "text-warning"
-                : "text-danger";
+    // Load patient info
+    load_patient_info();
 
-            body.append(`
-              <tr>
-                <td>${app.appointment_date}</td>
-                <td>${app.appointment_time}</td>
-                <td>${app.doctor}</td>
-                <td class="${statusColor} fw-bold">${app.status}</td>
-              </tr>
-            `);
-          });
-        } else {
-          body.append(
-            `<tr><td colspan="4" class="text-center text-muted py-3">No appointments found</td></tr>`
-          );
-        }
-      },
+    // Setup button click
+    $('#load-appointments').on('click', function() {
+        load_appointments();
     });
-  }
-
-  // Book appointment
-  page.body.on("click", "#book-appointment-btn", function () {
-    const doctor = $("#doctor").val();
-    const date = $("#appointment_date").val();
-    const time = $("#appointment_time").val();
-    const service = $("#service").val();
-
-    if (!doctor || !date || !time || !service) {
-      frappe.msgprint("Please fill all fields before booking.");
-      return;
-    }
-
-    frappe.call({
-      method: "myhealth.myhealth.api.patient_api.book_appointment",
-      args: {
-        patient: frappe.session.user,
-        doctor,
-        appointment_date: date,
-        appointment_time: time,
-        service,
-      },
-      callback: function (r) {
-        if (!r.exc) {
-          frappe.msgprint("✅ Appointment booked successfully!");
-          $("#appointment-form")[0].reset();
-          load_appointments();
-        }
-      },
-    });
-  });
-
-  // Initialize
-  load_doctors();
-  load_appointments();
 };
+
+function load_patient_info() {
+    frappe.call({
+        method: "myhealth.myhealth.page.patient_portal.patient_portal.get_patient_info",
+        callback: function(r) {
+            if (r.message && !r.message.error) {
+                $('#patient-info').html(
+                    `<strong>${r.message.name}</strong> - ${r.message.email} - ${r.message.phone}`
+                );
+            } else {
+                $('#patient-info').html('Patient info not found');
+            }
+        }
+    });
+}
+
+function load_appointments() {
+    $('#appointments').html('Loading appointments…');
+    frappe.call({
+        method: "myhealth.myhealth.api.appointment_api.get_patient_appointments",
+        callback: function(r) {
+            if (!r.message || r.message.length === 0) {
+                $('#appointments').html('<div>No appointments found</div>');
+                return;
+            }
+
+            const html = r.message.map(a => {
+                let status_class = '';
+                if (a.status === 'Cancelled') status_class = 'cancelled';
+                if (a.status === 'Completed') status_class = 'completed';
+
+                return `
+                    <div class="appointment-card ${status_class}">
+                        <strong>${a.service}</strong> with <em>${a.doctor_name}</em><br>
+                        Date: ${a.appointment_date} | ${a.start_time} - ${a.end_time}<br>
+                        Status: ${a.status}
+                    </div>
+                `;
+            }).join('');
+
+            $('#appointments').html(html);
+        }
+    });
+}
+
+

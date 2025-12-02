@@ -11,7 +11,8 @@
   "service",
   "service_status",
   "appointment_date",
-  "appointment_time",
+  "start_time",
+  "end_time",
   "status",
   "confirmation_sent",
   "reminder_sent",
@@ -36,11 +37,6 @@
    "label": "Appointment Date"
   },
   {
-   "fieldname": "appointment_time",
-   "fieldtype": "Time",
-   "label": "Appointment Time"
-  },
-  {
    "fieldname": "notes",
    "fieldtype": "Small Text",
    "label": "Notes"
@@ -48,12 +44,14 @@
   {
    "fieldname": "patient",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Patient ",
    "options": "Patient"
   },
   {
    "fieldname": "doctor",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Doctor ",
    "options": "Doctor"
   },
@@ -74,13 +72,23 @@
    "fieldname": "reminder_sent",
    "fieldtype": "Check",
    "label": "Reminder Sent"
+  },
+  {
+   "fieldname": "start_time",
+   "fieldtype": "Time",
+   "label": "Start time"
+  },
+  {
+   "fieldname": "end_time",
+   "fieldtype": "Time",
+   "label": "End time"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_calendar_and_gantt": 1,
  "links": [],
- "modified": "2025-10-28 15:37:07.200722",
+ "modified": "2025-11-21 12:27:47.482239",
  "modified_by": "Administrator",
  "module": "Myhealth",
  "name": "Appointment",

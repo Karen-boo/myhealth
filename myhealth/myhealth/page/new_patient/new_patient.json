@@ -1,23 +1,19 @@
 {
  "content": null,
- "creation": "2025-10-29 22:22:16.349634",
+ "creation": "2025-11-27 09:43:09.072371",
  "docstatus": 0,
  "doctype": "Page",
  "idx": 0,
- "modified": "2025-11-13 11:09:30.063423",
+ "modified": "2025-11-27 09:43:09.072371",
  "modified_by": "Administrator",
  "module": "Myhealth",
- "name": "doctor-dashboard",
+ "name": "new_patient",
  "owner": "Administrator",
- "page_name": "doctor-dashboard",
- "roles": [
-  {
-   "role": "Doctor"
-  }
- ],
+ "page_name": "new_patient",
+ "roles": [],
  "script": null,
  "standard": "Yes",
  "style": null,
  "system_page": 0,
- "title": "Doctor Dashboard"
+ "title": "New Patient"
 }

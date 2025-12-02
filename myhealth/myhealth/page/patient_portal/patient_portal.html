@@ -1,118 +1,27 @@
-<div class="mh-header shadow-sm mb-4">
-  <div class="container d-flex justify-content-between align-items-center py-3">
-    <h1 class="logo fw-bold m-0 text-white">MyHealth Portal</h1>
-    <nav>
-      <a href="/" class="text-white text-decoration-none me-3">Home</a>
-      <a href="/patient-portal" class="text-white text-decoration-none me-3">Patient Portal</a>
-      <a href="/contact" class="text-white text-decoration-none">Contact</a>
-    </nav>
-  </div>
-</div>
+<h2>🩺 Patient Portal</h2>
 
-<div id="patient-portal-wrapper" class="container mt-4 mb-5">
-  <div class="text-center mb-4">
-    <h2 class="fw-bold">🩺 Patient Portal</h2>
-    <p class="text-muted">Easily manage your appointments and view your medical history.</p>
-  </div>
+<div id="patient-info" class="mb-3">Loading patient info…</div>
 
-  <!-- Appointment Form -->
-  <div class="card shadow-sm border-0 mb-5">
-    <div class="card-body">
-      <h4 class="mb-3 text-primary">Book an Appointment</h4>
-      <form id="appointment-form" class="row g-3">
-        <div class="col-md-6">
-          <label class="form-label">Doctor</label>
-          <select id="doctor" class="form-select"></select>
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Date</label>
-          <input type="date" id="appointment_date" class="form-control" />
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Time</label>
-          <input type="time" id="appointment_time" class="form-control" />
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Service / Reason</label>
-          <textarea id="service" class="form-control" rows="1" placeholder="Reason for visit"></textarea>
-        </div>
-        <div class="col-12 text-end">
-          <button type="button" id="book-appointment-btn" class="btn btn-primary px-4">
-            Book Appointment
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
+<button class="btn btn-primary mb-3" id="load-appointments">Load Appointments</button>
 
-  <!-- Appointment History -->
-  <div class="card shadow-sm border-0">
-    <div class="card-body">
-      <h4 class="mb-3 text-primary">Appointment History</h4>
-      <div class="table-responsive">
-        <table class="table align-middle table-hover">
-          <thead class="table-light">
-            <tr>
-              <th>Date</th>
-              <th>Time</th>
-              <th>Doctor</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody id="appointments-body">
-            <tr>
-              <td colspan="4" class="text-center text-muted py-3">Loading...</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
-
-<footer class="mh-footer mt-5">
-  <div class="container text-center py-4">
-    <p class="mb-0 text-muted">
-      &copy; <span id="footer-year"></span> MyHealth. All rights reserved.
-    </p>
-  </div>
-</footer>
+<div id="appointments"></div>
 
 <style>
-  body {
-    font-family: "Inter", sans-serif;
-    background-color: #f8fafc;
+  #appointments {
+      margin-top: 20px;
   }
-
-  .mh-header {
-    background: #007bff;
-    color: white;
+  .appointment-card {
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      border-left: 5px solid #4B9CD3;
   }
-
-  .mh-header a:hover {
-    text-decoration: underline;
+  .appointment-card.cancelled {
+      border-left-color: #E57373;
+      opacity: 0.7;
   }
-
-  .card {
-    border-radius: 14px;
-  }
-
-  .btn-primary {
-    background-color: #007bff;
-    border: none;
-    font-weight: 500;
-    transition: 0.3s;
-  }
-
-  .btn-primary:hover {
-    background-color: #0056b3;
-  }
-
-  h4 {
-    color: #007bff;
-  }
-
-  .table th {
-    color: #007bff;
+  .appointment-card.completed {
+      border-left-color: #81C784;
   }
 </style>

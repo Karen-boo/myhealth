@@ -14,7 +14,8 @@ class Appointment(Document):
             {
                 "doctor": self.doctor,
                 "appointment_date": self.appointment_date,
-                "appointment_time": self.appointment_time,
+                "start_time": self.start_time,
+                "end_time": self.end_time,
                 "status": ["!=", "Cancelled"],
                 "name": ["!=", self.name],
             },
@@ -31,7 +32,7 @@ class Appointment(Document):
             frappe.sendmail(
                 recipients=self.patient_email,
                 subject=f"Appointment Confirmation with Dr. {self.doctor_name}",
-                message=f"Your appointment on {self.appointment_date} at {self.appointment_time} has been confirmed.",
+                message=f"Your appointment on {self.appointment_date} at {self.start_time} has been confirmed.",
             )
             self.confirmation_sent = 1
             self.db_set("confirmation_sent", 1)
@@ -69,7 +70,8 @@ def send_appointment_reminders():
             "patient_email",
             "doctor_name",
             "appointment_date",
-            "appointment_time",
+            "start_time",
+            "end_time",
         ],
     )
 
@@ -77,7 +79,7 @@ def send_appointment_reminders():
         frappe.sendmail(
             recipients=appt.patient_email,
             subject=f"Reminder: Appointment with Dr. {appt.doctor_name} Tomorrow",
-            message=f"Reminder: You have an appointment on {appt.appointment_date} at {appt.appointment_time}.",
+            message=f"Reminder: You have an appointment on {appt.appointment_date} at {appt.start_time}.",
         )
         frappe.db.set_value("Appointment", appt.name, "reminder_sent", 1)
 
@@ -92,7 +94,8 @@ def create_recurring_appointments():
             "patient": r.patient,
             "doctor": r.doctor,
             "appointment_date": new_date,
-            "appointment_time": r.appointment_time,
+            "start_time": r.start_time,
+            "end_time": r.end_time,
             "service": r.service,
             "status": "Scheduled",
         }).insert(ignore_permissions=True)
